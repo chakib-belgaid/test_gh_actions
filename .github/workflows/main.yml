@@ -18,7 +18,8 @@ jobs:
 
             - name: Save Docker Image ID
               id: save-image-id
-              run: echo "::set-output name=image_id::$(docker images -q imato:latest)"
+              run: |
+                  echo "IMAGE_ID=$(docker images -q imato:latest)" >> $GITHUB_ENV
 
     retrieve-artifact:
         runs-on: ubuntu-latest
@@ -27,7 +28,7 @@ jobs:
 
         steps:
             - name: Copy Artifact from Docker Image
-              run: docker cp ${{ needs.build.outputs.image_id }}:/path/to/artifact.txt .
+              run: docker cp ${{ needs.build.outputs.image_id }}:/home/apk/artifact.txt .
 
             - name: Display Artifact Content
               run: cat artifact.txt
