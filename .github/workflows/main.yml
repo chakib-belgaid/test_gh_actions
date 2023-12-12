@@ -13,12 +13,10 @@ jobs:
             - uses: actions/checkout@v4
             - name: Build the Docker image
               run: |
-                  TIMESTAMP=$(date +%s)
-                  docker build . --file Dockerfile --tag alpino:$TIMESTAMP
-                  echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+                  docker build . --file Dockerfile --tag alpino:latest
 
             - name: Save Docker image as a tar file
-              run: docker save alpino:$TIMESTAMP > image.tar
+              run: docker save alpino:latest > image.tar
             - name: Upload Docker image as a workflow artifact
               uses: actions/upload-artifact@v3
               with:
@@ -38,8 +36,8 @@ jobs:
             - name: Load Docker image from tar file
               run: docker load < image.tar
             - name: Run Docker image
-              run: docker run --name alpino alpino:$TIMESTAMP
+              run: docker run --name alpinos alpino:latest
             - name: retrieve the data from the container
-              run: docker cp alpino:/home/apk/artifact.txt .
+              run: docker cp alpinos:/home/apk/artifact.txt .
             - name: print the data
               run: cat artifact.txt
