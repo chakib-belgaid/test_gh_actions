@@ -38,7 +38,7 @@ jobs:
             - name: Load Docker image from tar file
               run: docker load < image.tar
             - name: Run Docker image
-              run: docker run--name alpino alpino:$TIMESTAMP
+              run: docker run --name alpino alpino:$TIMESTAMP
             - name: retrieve the data from the container
               run: docker cp alpino:/home/apk/artifact.txt .
             - name: print the data
