@@ -27,11 +27,11 @@ jobs:
         needs: build
 
         steps:
-            - name : run the docker container
-            run: docker run -d --name imato ${{ needs.build.outputs.image_id }}
+            - name: run the docker container
+              run: docker run -d --name imato ${{ needs.build.outputs.image_id }}
 
-            - name: Copy Artifact from Docker Image
+            - name: retrieve the artifact
               run: docker cp ${{ needs.build.outputs.image_id }}:/home/apk/artifact.txt .
-              
+
             - name: Display Artifact Content
               run: cat artifact.txt
