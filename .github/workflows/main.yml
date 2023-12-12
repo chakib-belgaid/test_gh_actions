@@ -28,7 +28,7 @@ jobs:
 
         steps:
             - name: run the docker container
-              run: docker run ---rm  --name imato imato:latest
+              run: docker run --rm  --name imato imato:latest
 
             - name: retrieve the artifact
               run: docker cp imato:/home/apk/artifact.txt .
