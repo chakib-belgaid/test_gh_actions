@@ -28,10 +28,10 @@ jobs:
 
         steps:
             - name: run the docker container
-              run: docker run -d --name imato ${{ needs.build.outputs.image_id }}
+              run: docker run ---rm  --name imato imato:latest
 
             - name: retrieve the artifact
-              run: docker cp ${{ needs.build.outputs.image_id }}:/home/apk/artifact.txt .
+              run: docker cp imato:/home/apk/artifact.txt .
 
             - name: Display Artifact Content
               run: cat artifact.txt
