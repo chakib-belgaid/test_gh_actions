@@ -10,16 +10,16 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout Repository
-              uses: actions/checkout@v2
-
-            - name: Build Docker Image
-              run: docker build -t imato:latest .
-
-            - name: Save Docker Image ID
-              id: save-image-id
-              run: |
-                  echo "IMAGE_ID=$(docker images -q imato:latest)" >> $GITHUB_ENV
+            - uses: actions/checkout@v4
+            - name: Build the Docker image
+              run: docker build . --file Dockerfile --tag alpino:$(date +%s)
+            - name: Save Docker image as a tar file
+              run: docker save alpino:$(date +%s) > image.tar
+            - name: Upload Docker image as a workflow artifact
+              uses: actions/upload-artifact@v2
+              with:
+                  name: docker-image
+                  path: image.tar
 
     retrieve-artifact:
         runs-on: ubuntu-latest
@@ -27,11 +27,15 @@ jobs:
         needs: build
 
         steps:
+            - name: Download Docker image artifact
+              uses: actions/download-artifact@v2
+              with:
+                  name: docker-image
+            - name: Load Docker image from tar file
+              run: docker load < image.tar
             - name: run the docker container
               run: docker run --rm  --name imato imato:latest
-
             - name: retrieve the artifact
               run: docker cp imato:/home/apk/artifact.txt .
-
             - name: Display Artifact Content
               run: cat artifact.txt
